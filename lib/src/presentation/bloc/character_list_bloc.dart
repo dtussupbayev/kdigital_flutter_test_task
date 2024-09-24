@@ -1,59 +1,91 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kdigital_test/src/core/models/api_result.dart';
 import 'package:kdigital_test/src/domain/use_cases/get_characters_use_case.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kdigital_test/src/data/models/character.dart';
-import 'package:equatable/equatable.dart';
 
 part 'character_list_event.dart';
 part 'character_list_state.dart';
 
 class CharacterListBloc extends Bloc<CharacterListEvent, CharacterListState> {
   final GetCharactersUseCase getCharactersUseCase;
+  int _currentPage = 1;
+  bool _isFetching = false;
 
-  CharacterListBloc(
-    CharacterListState initialState,
-    this.getCharactersUseCase,
-  ) : super(initialState) {
-    on<GetCharacterListEvent>(
-      (event, emitter) => _getDataOnMainPageCasino(event, emitter),
-    );
-    on<DataLoadedCharacterListEvent>(
-      (event, emitter) => _dataLoadedOnMainPageCasino(event, emitter),
-    );
-    on<LoadingCharacterListEvent>(
-      (event, emitter) => emitter(LoadingMainPageState()),
-    );
+  CharacterListBloc(this.getCharactersUseCase)
+      : super(CharacterListState.initial()) {
+    on<GetCharacterListEvent>(_onGetInitialCharacters);
+    on<GetMoreCharacterListEvent>(_onGetMoreCharacters);
+    on<RetryGetMoreCharacterListEvent>(_onRetryGetMoreCharacters);
   }
 
-  Future<void> _dataLoadedOnMainPageCasino(
-    DataLoadedCharacterListEvent event,
-    Emitter<CharacterListState> emit,
-  ) async {
-    try {
-      if (event.characters != null) {
-        emit(SuccessfulCharacterListState(event.characters!));
-      } else {
-        emit(UnSuccessfulCharacterListState('No characters loaded'));
-      }
-    } catch (e) {
-      emit(UnSuccessfulCharacterListState(e.toString()));
-    }
-  }
-
-  Future<void> _getDataOnMainPageCasino(
+  Future<void> _onGetInitialCharacters(
     GetCharacterListEvent event,
     Emitter<CharacterListState> emit,
   ) async {
+    emit(state.copyWith(status: CharacterListStatus.loading));
+    await _fetchCharacters(emit);
+  }
+
+  Future<void> _onGetMoreCharacters(
+    GetMoreCharacterListEvent event,
+    Emitter<CharacterListState> emit,
+  ) async {
+    if (_isFetching || state.isPaginating) return;
+    _isFetching = true;
+    emit(state.copyWith(isPaginating: true));
+
+    await _fetchCharacters(emit, isLoadMore: true);
+    _isFetching = false;
+  }
+
+  Future<void> _onRetryGetMoreCharacters(
+    RetryGetMoreCharacterListEvent event,
+    Emitter<CharacterListState> emit,
+  ) async {
+    if (_isFetching) return;
+    _isFetching = true;
+    emit(state.copyWith(isRetrying: true));
+
+    await _fetchCharacters(emit, isLoadMore: true);
+    _isFetching = false;
+  }
+
+  Future<void> _fetchCharacters(
+    Emitter<CharacterListState> emit, {
+    bool isLoadMore = false,
+  }) async {
     try {
-      emit(LoadingMainPageState());
-      final charactersResult = await getCharactersUseCase.execute(event.page);
+      final charactersResult = await getCharactersUseCase.execute(_currentPage);
       if (charactersResult.status == ApiResultStatus.success) {
-        add(DataLoadedCharacterListEvent(charactersResult.data!));
+        final characters = charactersResult.data!;
+        emit(state.copyWith(
+          status: CharacterListStatus.successful,
+          characters: [...state.characters, ...characters],
+          isPaginating: false,
+          isRetrying: false,
+        ));
+        _currentPage++;
       } else {
-        emit(UnSuccessfulCharacterListState(charactersResult.errorMessage!));
+        _handleErrorState(emit, charactersResult.errorMessage!, isLoadMore);
       }
     } catch (e) {
-      emit(UnSuccessfulCharacterListState(e.toString()));
+      _handleErrorState(emit, e.toString(), isLoadMore);
     }
+  }
+
+  void _handleErrorState(
+    Emitter<CharacterListState> emit,
+    String errorMessage,
+    bool isLoadMore,
+  ) {
+    emit(state.copyWith(
+      status: isLoadMore
+          ? CharacterListStatus.nextPageUnsuccessful
+          : CharacterListStatus.unsuccessful,
+      errorMessage: errorMessage,
+      isPaginating: false,
+      isRetrying: false,
+    ));
   }
 }

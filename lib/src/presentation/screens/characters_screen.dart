@@ -13,17 +13,24 @@ class CharactersScreen extends StatelessWidget {
     return Scaffold(
       body: BlocProvider(
         create: (context) => CharacterListBloc(
-          InitialCharacterListState(),
           serviceLocator.get<GetCharactersUseCase>(),
-        )..add(const GetCharacterListEvent(1)),
+        )..add(const GetCharacterListEvent()),
         child: BlocBuilder<CharacterListBloc, CharacterListState>(
           builder: (blocContext, state) {
-            if (state is LoadingMainPageState) {
+            if (state.status == CharacterListStatus.loading) {
               return LoadingWidget();
-            } else if (state is SuccessfulCharacterListState) {
+            } else if (state.status == CharacterListStatus.successful) {
               return CharacterListWidget(state: state);
-            } else if (state is UnSuccessfulCharacterListState) {
-              return FailureWidget(errorMessage: state.errorMessage);
+            } else if (state.status ==
+                CharacterListStatus.nextPageUnsuccessful) {
+              return CharacterListWidget(state: state);
+            } else if (state.status == CharacterListStatus.unsuccessful) {
+              return FailureWidget(
+                errorMessage: state.errorMessage ?? 'Unknown error',
+                onRetry: () => blocContext
+                    .read<CharacterListBloc>()
+                    .add(GetCharacterListEvent()),
+              );
             }
             return SizedBox();
           },

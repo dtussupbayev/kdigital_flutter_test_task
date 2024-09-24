@@ -8,26 +8,13 @@ sealed class CharacterListEvent extends Equatable {
 }
 
 class GetCharacterListEvent extends CharacterListEvent {
-  final int page;
-
-  const GetCharacterListEvent(this.page);
-
-  @override
-  List<Object?> get props => [];
+  const GetCharacterListEvent();
 }
 
-class LoadingCharacterListEvent extends CharacterListEvent {
-  const LoadingCharacterListEvent();
-
-  @override
-  List<Object?> get props => [];
+class GetMoreCharacterListEvent extends CharacterListEvent {
+  const GetMoreCharacterListEvent();
 }
 
-class DataLoadedCharacterListEvent extends CharacterListEvent {
-  final List<Character>? characters;
-
-  const DataLoadedCharacterListEvent(this.characters);
-
-  @override
-  List<Object?> get props => [characters];
+class RetryGetMoreCharacterListEvent extends CharacterListEvent {
+  const RetryGetMoreCharacterListEvent();
 }

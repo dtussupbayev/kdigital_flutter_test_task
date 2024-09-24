@@ -1,31 +1,45 @@
 part of 'character_list_bloc.dart';
 
-sealed class CharacterListState extends Equatable {}
+enum CharacterListStatus { initial, loading, successful, unsuccessful, nextPageUnsuccessful }
 
-class InitialCharacterListState extends CharacterListState {
-  @override
-  List<Object> get props => [];
-}
-
-class LoadingMainPageState extends CharacterListState {
-  @override
-  List<Object> get props => [];
-}
-
-class UnSuccessfulCharacterListState extends CharacterListState {
-  final String errorMessage;
-
-  UnSuccessfulCharacterListState(this.errorMessage);
-
-  @override
-  List<Object> get props => [];
-}
-
-class SuccessfulCharacterListState extends CharacterListState {
+class CharacterListState extends Equatable {
+  final CharacterListStatus status;
   final List<Character> characters;
+  final bool isPaginating;
+  final bool isRetrying;
+  final String? errorMessage;
 
-  SuccessfulCharacterListState(this.characters);
+  CharacterListState({
+    required this.status,
+    required this.characters,
+    this.isPaginating = false,
+    this.isRetrying = false,
+    this.errorMessage,
+  });
+
+  factory CharacterListState.initial() {
+    return CharacterListState(
+      status: CharacterListStatus.initial,
+      characters: [],
+    );
+  }
+
+  CharacterListState copyWith({
+    CharacterListStatus? status,
+    List<Character>? characters,
+    bool? isPaginating,
+    bool? isRetrying,
+    String? errorMessage,
+  }) {
+    return CharacterListState(
+      status: status ?? this.status,
+      characters: characters ?? this.characters,
+      isPaginating: isPaginating ?? this.isPaginating,
+      isRetrying: isRetrying ?? this.isRetrying,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
 
   @override
-  List<Object> get props => [characters];
+  List<Object?> get props => [status, characters, isPaginating, isRetrying, errorMessage];
 }
