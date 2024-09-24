@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kdigital_test/src/data/models/character.dart';
 
-import 'image_loading_widget.dart';
+import 'loading_widget.dart';
 
 class CharacterTileWidget extends StatelessWidget {
   final Character character;
@@ -32,13 +33,16 @@ class CharacterTileWidget extends StatelessWidget {
               padding: const EdgeInsets.all(2.0),
               child: Text(character.name),
             ),
-            Image.network(
-              character.image,
-              loadingBuilder: (context, child, loadingProgress) {
-                return loadingProgress == null ? child : ImageLoadingWidget();
-              },
+            CachedNetworkImage(
               width: 100,
               height: 100,
+              imageUrl: character.image,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  LoadingWidget(
+                width: 25,
+                height: 25,
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           ],
         ),
