@@ -3,11 +3,11 @@ import 'package:kdigital_test/src/data/repository/characters_repository_impl.dar
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 
-class MainDIModule {
-  void configure(GetIt getIt) {
-    final httpClient = Client();
+final serviceLocator = GetIt.instance;
 
-    getIt.registerLazySingleton<CharactersRepository>(
-        () => CharactersRepositoryImpl(httpClient));
-  }
+void initDependencies() {
+  final httpClient = Client();
+
+  serviceLocator.registerLazySingleton<CharactersRepository>(
+      () => CharactersRepositoryImpl(httpClient));
 }

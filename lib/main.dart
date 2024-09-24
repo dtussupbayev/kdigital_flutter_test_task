@@ -1,9 +1,11 @@
-import 'package:kdigital_test/src/di/main_di_module.dart';
-import 'package:kdigital_test/src/presentation/ui/character_screen.dart';
+import 'package:kdigital_test/src/service_locator/service_locator.dart';
+import 'package:kdigital_test/src/presentation/screens/character_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  initDependencies();
+
   runApp(const MyApp());
 }
 
@@ -12,7 +14,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MainDIModule().configure(GetIt.I);
     return MaterialApp(
       title: 'Test app',
       home: CharactersScreen(),
