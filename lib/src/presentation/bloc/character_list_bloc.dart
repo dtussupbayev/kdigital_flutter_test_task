@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kdigital_test/src/core/models/api_result.dart';
-import 'package:kdigital_test/src/domain/use_cases/get_characters_use_case.dart';
 import 'package:kdigital_test/src/data/models/character.dart';
+import 'package:kdigital_test/src/domain/use_cases/get_characters_use_case.dart';
 
 part 'character_list_event.dart';
 part 'character_list_state.dart';

@@ -15,34 +15,90 @@ class CharacterTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.topLeft,
-      padding: EdgeInsets.all(8),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          color: Color.fromARGB(120, 204, 255, 255),
-          shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: Offset(0, 4),
           ),
-        ),
-        child: Column(
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Text(character.name),
-            ),
-            CachedNetworkImage(
-              width: 100,
-              height: 100,
-              imageUrl: character.image,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  LoadingWidget(
-                width: 25,
-                height: 25,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                width: 90,
+                height: 90,
+                fit: BoxFit.cover,
+                imageUrl: character.image,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    LoadingWidget(
+                  width: 25,
+                  height: 25,
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    character.name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade900,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        character.status == "Alive"
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: character.status == "Alive"
+                            ? Colors.green
+                            : Colors.red,
+                        size: 18,
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        "${character.species} - ${character.status}",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.person, size: 18, color: Colors.grey[600]),
+                      SizedBox(width: 6),
+                      Text(
+                        'Gender: ${character.gender}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
