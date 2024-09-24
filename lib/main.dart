@@ -1,5 +1,5 @@
+import 'package:kdigital_test/src/presentation/presentation.dart';
 import 'package:kdigital_test/src/service_locator/service_locator.dart';
-import 'package:kdigital_test/src/presentation/screens/characters_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

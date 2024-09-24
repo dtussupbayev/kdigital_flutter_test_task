@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kdigital_test/src/data/models/character.dart';
 
+import 'image_loading_widget.dart';
+
 class CharacterTileWidget extends StatelessWidget {
   final Character character;
 
@@ -32,8 +34,11 @@ class CharacterTileWidget extends StatelessWidget {
             ),
             Image.network(
               character.image,
-              width: 50,
-              height: 50,
+              loadingBuilder: (context, child, loadingProgress) {
+                return loadingProgress == null ? child : ImageLoadingWidget();
+              },
+              width: 100,
+              height: 100,
             ),
           ],
         ),

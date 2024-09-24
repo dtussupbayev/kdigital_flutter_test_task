@@ -8,15 +8,7 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        width: 50,
-        height: 50,
-        margin: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(12)),
-        ),
-        child: const CircularProgressIndicator(),
-      ),
+      child: const Text('Loading characters...'),
     );
   }
 }
