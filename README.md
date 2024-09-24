@@ -1,41 +1,33 @@
-# Kdigital Test
+## Rick & Morty - Flutter BLoC Clean Architecture Project
 
-Test Task: Online Kdigital Flutter application.
+<h4 align="left">
+  Rick & Morty: A BLoC-Driven Flutter App with Clean Architecture
+</h4>
 
-Do you remember Rick and Morty cartoon? 
-Your goal is to create the app with all the characters from this cartoon, and make it look juicy.
+### Stack
 
-API docs: https://rickandmortyapi.com/documentation
+| Tools               | Link                                                            |
+|:--------------------|:----------------------------------------------------------------|
+| State Management | [flutter_bloc](https://pub.dev/packages/flutter_bloc)           |
+| Service Locator  | [get_it](https://pub.dev/packages/get_it)                       |
+| Serialization    | [json_serializable](https://pub.dev/packages/json_serializable) |
+| Network Requests    | [http](https://pub.dev/packages/http) |
+| Image Caching    | [cached_network_image](https://pub.dev/packages/cached_network_image) |
+| Equality Comparison   | [equatable](https://pub.dev/packages/equatable) |
 
-##To-do:
+### Showcases
 
-Using clean architecture design pattern
-- Refactor application to your best understanding of the design pattern
-- Fix loading state and fetching data feature
-- Find and fix all other bugs and issues
-- Add more information about characters
-- Optimize scrolling performance
-- Implement pagination
-
-## Optional:
-Implement pagination
-- Add infinite scrolling pagination
-- Implement recovering from an `Error` state after the last request failed in the paginated view (i.e Application should be able to make a request and return a success response when the previous request fails. Read `Notes` for more information)
-- Account for all possible states and edge cases
-    - Initial
-    - Loading
-        - Initial loading state (when fetching the first page)
-        - Next page loading state (when fetching the next page after previous pages has been fetched successfully)
-    - Success
-    - Error 
-        - Initial error state (when fetching the first page)
-        - Next page error state (when fetching the next page after previous pages has been fetched successfully)
-
-
-## Things to keep in mind
-- You need to use same libraries, but you can also add more (reasonable amount)
-- Simulate a failure case by turning off your internet connection and a success case by turning on your internet connection.
-- Your code should compile without errors and app should run on both iOS and Android seamlessly
-- Keep things clean, simple and fun
-- Use bloc state-management if possible
-- You can fork or clone the repo and share the link (make sure it is public and accessible) 
+<table style="width:100%">
+  <tr>
+    <th>Characters Success</th>
+    <th>Characters Next Page Loading</th> 
+    <th>Characters Next Page Failure</th>
+    <th>Characters Failure</th>
+  </tr>
+  <tr>
+    <td><img src = "screenshots/characters_success.jpg" width=240/></td> 
+    <td><img src = "screenshots/characters_next_page_loading.jpg" width=240/></td>
+    <td><img src = "screenshots/characters_next_page_failure.jpg" width=240/></td>
+    <td><img src = "screenshots/characters_failure.jpg" width=240/></td>
+  </tr>
+</table>
