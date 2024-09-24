@@ -1,28 +1,20 @@
-import 'dart:async';
-import 'dart:convert';
-
+import 'package:kdigital_test/src/core/models/api_result.dart';
+import 'package:kdigital_test/src/data/datasources/remote/characters_remote_data_source.dart';
 import 'package:kdigital_test/src/data/models/character.dart';
-import 'package:kdigital_test/src/data/repository/characters_repository.dart';
-import 'package:http/http.dart';
+import 'package:kdigital_test/src/domain/repositories/characters_repository.dart';
 
 class CharactersRepositoryImpl implements CharactersRepository {
-  final Client client;
+  final CharactersRemoteDataSource remoteDataSource;
 
-  CharactersRepositoryImpl(this.client);
+  CharactersRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<List<Character>?> getCharacters(int page) async {
-    var client = Client();
-    final charResult = await client.get(
-      Uri.parse("https://rickandmortyapi.com/api/character/?page=$page"),
-    );
-    final jsonMap = await json.decode(charResult.body) as Map<String, dynamic>;
-    return Future.value(
-      List.of(
-        (jsonMap["results"] as List<dynamic>).map(
-          (value) => Character.fromJson(value),
-        ),
-      ),
-    );
+  Future<ApiResult<List<Character>>> getCharacters(int page) async {
+    try {
+      final characters = await remoteDataSource.getCharactersFromApi(page);
+      return characters;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

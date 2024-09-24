@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kdigital_test/src/presentation/bloc/main_state.dart';
-import 'package:kdigital_test/src/presentation/widgets/character_tile_widget.dart';
+import 'package:kdigital_test/src/presentation/bloc/character_list_bloc.dart';
+
+import 'character_tile_widget.dart';
 
 class CharacterListWidget extends StatelessWidget {
-  final SuccessfulMainPageState state;
+  final SuccessfulCharacterListState state;
   const CharacterListWidget({
     Key? key,
     required this.state,
