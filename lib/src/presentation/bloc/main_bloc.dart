@@ -3,8 +3,7 @@ import 'package:kdigital_test/src/presentation/bloc/main_event.dart';
 import 'package:kdigital_test/src/presentation/bloc/main_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MainPageBloc
-    extends Bloc<MainPageEvent, MainPageState> {
+class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   final CharactersRepository _charactersRepository;
 
   MainPageBloc(
@@ -26,7 +25,7 @@ class MainPageBloc
     DataLoadedOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
-    if (event.characters == null) {
+    if (event.characters != null) {
       emit(SuccessfulMainPageState(event.characters!));
     } else {
       emit(UnSuccessfulMainPageState());
@@ -37,6 +36,7 @@ class MainPageBloc
     GetTestDataOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
+    emit(LoadingMainPageState());
     _charactersRepository.getCharacters(event.page).then(
       (value) {
         add(DataLoadedOnMainPageEvent(value));
