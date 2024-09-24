@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:kdigital_test/src/core/api/api_contants.dart';
 import 'package:kdigital_test/src/core/models/api_result.dart';
 import 'package:kdigital_test/src/data/datasources/remote/characters_remote_data_source.dart';
 import 'package:kdigital_test/src/data/models/character.dart';
@@ -14,7 +16,9 @@ class CharactersRemoteDataSourceImpl implements CharactersRemoteDataSource {
   Future<ApiResult<List<Character>>> getCharactersFromApi(int page) async {
     try {
       final response = await client.get(
-        Uri.parse('https://rickandmortyapi.com/api/character/?page=$page'),
+        Uri.parse(
+          '${ApiConstants.baseUrl}${ApiConstants.charactersEndpoint}?page=$page',
+        ),
       );
 
       if (response.statusCode == 200) {
@@ -24,7 +28,9 @@ class CharactersRemoteDataSourceImpl implements CharactersRemoteDataSource {
             .toList();
         return ApiResult.success(characters);
       } else {
-        throw Exception('${response.statusCode}');
+        return ApiResult.failure(
+          'Bad response status code:${response.statusCode}',
+        );
       }
     } on SocketException {
       return ApiResult.failure('No Internet connection');
